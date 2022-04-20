@@ -77,7 +77,6 @@ def crop_image(img_path, start_h, start_w, img_size, save_path):
 
 # show BGR (or grayscale) images in matplotlib figure
 # scale of the image can be added in yaxis by setting parameter 'pixel2micron'
-# (見邨追記)
 def cv2Plt(cv2_image, figsize = (5, 5), pixel2micron = 2.54, show_scale = True):
     assert cv2_image is not None, 'image is NoneType'
     if len(cv2_image.shape) == 2:
@@ -99,7 +98,7 @@ def cv2Plt(cv2_image, figsize = (5, 5), pixel2micron = 2.54, show_scale = True):
 
 def predict_contour(img):
     """
-    find contours by threshoulding（見邨）
+    find contours by threshoulding
     """
 
     img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -147,7 +146,7 @@ def generate_json_template(json_data, img_path):
     return(json_data)
 
 
-# convert mask image to json format（見邨）
+# convert mask image to json format
 def mask2points(mask):
     assert len(mask.shape) == 2, 'function mask2points is not for color images'
     mask_255 = (mask * 255).astype(np.uint8)
@@ -169,14 +168,15 @@ def masks2points_list(masks):
     return(all_points_x_list, all_points_y_list)
 
 def SquareResize(img, size, background = 'mean'):
-    # 入力された画像を，指定したサイズの正方形にリサイズする
-    # 出力はカラー画像とする
-    # 縦横比はそのまま残し，余白はグレーで埋める
+    # Resizes the input image to a square of the specified size
+    # Output: a color image
+    # Leave the aspect ratio as it is and fill the margins with gray or specified value.
     h, w = img.shape[:2]
     mag = size / max(h, w)
     img2 = cv2.resize(img ,(int(w * mag), int(h * mag)))
     
-    if background == 'mean':
+    if type(background) == str:
+        if background == 'mean':
             background = int(np.mean(img))
     img3 = np.ones((size, size, 3), dtype = "u1") * background
     if h > w:

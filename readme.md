@@ -67,8 +67,8 @@ He, K., Gkioxari, G., Dollár, P., & Girshick, R. (2017). Mask r-cnn. *In* Proce
 
 # notes
 ## log
-2022/4/14: released
+2022/4/20: translated Japanese comments to English
 
-## Todo
-1. translate Japanese comments to English. 
-2. add some images for example
+2022/4/20: submitted the paper to *Computers and Geosciences*
+
+2022/4/14: released

@@ -59,7 +59,7 @@ We used Google Colaboratory for test.
 
 
 ## Dataset availability
-Training, validation and practical-test (see paper for detail) datasets are temporally available at Author's [Google Drive](https://drive.google.com/drive/folders/1QC7deWgQRFkoDdOLao3SatYC6TO4moeT?usp=sharing).
+Training, validation and practical-test (see paper for detail) datasets are available at [Mendeley data](https://data.mendeley.com/datasets/zdpz6m9gzf/1).
 
 ## for second-stage classification
 To reduce false positives, we re-classify the detected regions by image classification model EfficientNet-V2. We provide sample codes that are customized for output format of ai_ichthyolith at [eNetV2_for_ai_ichthyolith](https://github.com/KazuhideMimura/eNetV2_for_ai_ichthyolith).
@@ -73,7 +73,6 @@ He, K., Gkioxari, G., Dollár, P., & Girshick, R. (2017). Mask r-cnn. *In* Proce
 
 ## Todo
 1. Confirmation of operation
-2. share Dataset on google drive
 3. submit paper to *Computers & Geosciences*
 4. share preprint on EarthArXiv
 5. add some images for example

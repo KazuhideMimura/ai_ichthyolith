@@ -15,8 +15,6 @@ from mrcnn.config import Config
 from functions.utils import save_pickle, masks2points_list
 
 
-# ignore_classids を追加し，特定のクラスの検出結果を除外できるようにした (見邨)
-# noise を検出すると数が大量になるので…
 def detect(model, image, filename, ignore_classids=[], save_points = False, 
            rois_dtype = 'int16', save_mask = True):
     results = model.detect([image], verbose=0)
@@ -42,18 +40,12 @@ def detect(model, image, filename, ignore_classids=[], save_points = False,
     return result
 
 
-
-
-# TODO: mask ではなく all_points で保存できるモードを作る
-
 def detect_whole_slide(model, slide_image, crop_h, crop_w, stride, slide_name='', 
                        ignore_classids=[], save_points = False, save_mask = True):
     num_iter = 0
     detections = []
     slide_h, slide_w, _ = slide_image.shape
-    # TODO: 右と下の端の漏れを修正
-    # --> iter_h, iter_w に 1 を加え，スライド画像の右側と下側に白い領域を追加する？（見邨）
-
+    
     iter_h = math.floor((slide_h - crop_h + stride) / stride)
     iter_w = math.floor((slide_w - crop_w + stride) / stride)
     for ih in range(iter_h):
@@ -102,10 +94,8 @@ def batch_detect_whole_slide(weights_path, slide_path_list, config, save_dir,
                                        save_mask=save_mask)
         elapsed_time = time.time() - start
         print()
-        print(f'elapsed time: {int(round(elapsed_time))} [sec]') # 小数点以下切り捨て（見邨）
+        print(f'elapsed time: {int(round(elapsed_time))} [sec]')
 
-        # 検出の終了時間を予測するお節介機能を追加（見邨）
-        # todo: 所要時間ではなく時刻を表示する --> datetime
         if slide_path == slide_path_list[0]:
             if len(slide_path_list) >= 2:
                 time_required = elapsed_time * (len(slide_path_list) - 1) / 60
@@ -125,10 +115,8 @@ def batch_detect_whole_slide(weights_path, slide_path_list, config, save_dir,
             print(f'total                         {whole_elapsed_time}', file=f)
 
 
-
-# 見邨追記
-# 顕微鏡で撮影した分割画像を検出
-# 画像名は，SampleName_slideNo_absX_absY.jpg
+# Detect from segmented images taken with a microscope
+# image name should be SampleName_slideNo_absX_absY.jpg
 def batch_detect_microscopes(weights_path, microscope_img_dir, config, save_dir,
                              device='/gpu:0', time_output=False, ignore_classids = [], 
                              save_points = False, save_mask = True, slide_No = None):
@@ -161,9 +149,6 @@ def batch_detect_microscopes(weights_path, microscope_img_dir, config, save_dir,
     for slide_name in slide_names:
         print(f'\nstart detecting.\nslide name: {slide_name}')
         start = time.time()
-        
-
-        # detect_whole_slide を修正
         num_iter = 0
         detections = []
         # slide_h, slide_w, _ = slide_image.shape
@@ -203,7 +188,7 @@ def batch_detect_microscopes(weights_path, microscope_img_dir, config, save_dir,
         print()
         print(f'elapsed time: {int(round(elapsed_time))} [sec]') # 小数点以下切り捨て（見邨）
         
-        # # 終了時間の見積もり
+        # # predict estimated time
         # if slide_path == slide_path_list[0]:
         #     if len(slide_path_list) >= 2:
         #         time_required = elapsed_time * (len(slide_path_list) - 1) / 60

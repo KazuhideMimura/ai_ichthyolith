@@ -10,9 +10,6 @@ from functions.process_excel import ExcelDataProcessor
 from functions.process_json import convert_class_label
 from functions.utils import load_json, load_pickle, save_json, load_xml, generate_json_template, save_pickle
 
-# このファイル一式見邨作成
-
-
 def remove_slide(ROOT_DIR, sample_ID, remove_slide_numbers, reasons):
     if len(remove_slide_numbers) >= 1:
         img_dir = os.path.dirname(glob(f'{ROOT_DIR}data/images/*/*/{sample_ID}*.jpg')[0])
@@ -219,8 +216,6 @@ def pickle2gts(pickle_path):
 
 def json2excel(trimmed_dir, excel_path, class_list, pixel2micron = 2.54):
     
-    # json の空きクラスを埋める処理は，fix_json に移行．問題がないか注意
-    
     df = pd.read_excel(excel_path, index_col=0)
     
     for cl in class_list:
@@ -270,7 +265,7 @@ def json2excel(trimmed_dir, excel_path, class_list, pixel2micron = 2.54):
     df.to_excel(excel_path)
 
 def fix_json(json_path, class_name):
-    # クラスラベルのない json data に特定のクラスを割り当てる
+    # Assign a specific class to json data without a class label
     json_data = load_json(json_path)
     for k1, v1 in json_data.items():
         for k2, v2 in v1['regions'].items():
@@ -464,7 +459,7 @@ def check_dataset(dataset_name, remove_classes = []):
             for v2 in v1['regions'].values():
                 class_name = v2['region_attributes']['name']
 
-                # 特定のクラスの画像を削除
+                #Remove images of a specific class
                 if class_name in remove_classes:
                     img_path = os.path.join(subset_dir, v1['filename'])
                     try:
@@ -494,14 +489,13 @@ def check_dataset(dataset_name, remove_classes = []):
 
 
         
-# process_excel のコピー，本当は呼び出したい
+# copied from process_excel
 def _get_size(all_points_x, all_points_y, pixel2micron = 2.54):
     contour = np.array([all_points_x, all_points_y], dtype=np.int32).T
     rect = cv2.minAreaRect(contour)
     size = rect[1][0] * rect[1][1] * (pixel2micron ** 2)
     return size
 
-# 座標の最大・最小から面積を取得 (load_from_json, load_from_pickle)
 def _get_length(all_points_x, all_points_y, pixel2micron = 2.54):
     contour = np.array([all_points_x, all_points_y], dtype=np.int32).T
     rect = cv2.minAreaRect(contour)

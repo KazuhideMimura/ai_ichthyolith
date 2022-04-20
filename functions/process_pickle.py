@@ -88,14 +88,12 @@ def convert_to_eval_format(pickle_path, IoU=0.5, rois_dtype = 'int16', save_crop
         new_class_ids = np.append(new_class_ids, r[0]['class_ids'])
         new_scores = np.append(new_scores, r[0]['scores'])
         
-        # points の変換 (見)
         if 'all_points_xs' in r[0].keys():
             convertAbsPoints = True
             abs_all_points_xs, abs_all_points_ys = convert_to_abs_points(r[0]['all_points_xs'], r[0]['all_points_ys'], x, y)
             new_all_points_xs += abs_all_points_xs
             new_all_points_ys += abs_all_points_ys
 
-        # 切り出し画像名の取得（見）
         if save_croppedName:
             num_classIds = len(r[0]['class_ids'])
             cropped_names += [r[0]['filename']] * num_classIds

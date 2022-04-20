@@ -35,8 +35,7 @@ class ExcelDataProcessor:
 
     def get_columns(self):
         """
-        列名を取得する
-        :return: 列名のリスト (list)
+        :return: list of columns
         """
         df = self.read_excel()
         columns = list(df.columns)
@@ -45,7 +44,6 @@ class ExcelDataProcessor:
 
     def add_columns(self, col_name):
         """
-        列名を追加する
         :param col_name:
         :return:
         """
@@ -53,16 +51,14 @@ class ExcelDataProcessor:
 
     def read_excel(self):
         """
-        excelデータの読み込む
-        :return: データフレーム (pd.DataFrame)
+        :return: pd.DataFrame
         """
         return pd.read_excel(self.excel_path, header=0, index_col=0)
 
     def get_identical_slide_path(self, original_slide_name):
         """
-        original_slide_nameに含まれるスライド画像のパスを取得する
         :param original_slide_name:
-        :return:
+        :return: path (str)
         """
         for path in self.slides_path:
             if path.endswith(original_slide_name):
@@ -71,7 +67,7 @@ class ExcelDataProcessor:
 
     def load_from_json(self, json_path, sheet_name=None):
         """
-        viaで作成したjsonファイルからアノテーションデータを読み込む
+        Load annotation data from json file created by vgg image annotator
         :param json_path:
         :param sheet_name:
         :return:
@@ -115,7 +111,7 @@ class ExcelDataProcessor:
 
     def load_from_pickle(self, pickle_path, labels, sheet_name=None):
         """
-        ichthyolith_test.pyによって作成されたpickleファイルから座標データを読み込む
+        Load coordinate data from the pickle file created by ichthyolith_test.py
         :param pickle_path:
         :param labels:
         :param sheet_name:
@@ -161,11 +157,10 @@ class ExcelDataProcessor:
         print('finished loading from pickle.')
 
     
-    # todo: 機能分割
     def load_from_xml(self, ROOT_DIR, xml_dir, trimmed_class_dir = '', sheet_name=None, 
                       margin = None, slide_img_dir = None, cl_name = None):
         """
-        labelImg で作成した xml ファイルからアノテーションデータを読み込む（見邨）
+        Load annotation data from xml file created by labelImg
         :param xml_dir:
         :param save_excel_path:
         :param sheet_name:
@@ -268,21 +263,12 @@ class ExcelDataProcessor:
             save_json(json_data, json_path) 
         
     
-    
-    
-    
-    
-    
-    
-    
     def put_labels(self, labels, col_name, conditions=None, display_mode='box'):
         """
-        クラスラベルを付与する
-        :param labels: 付与するラベルのリスト (list)
-        :param col_name: ラベルを付ける列名 (str)
-        :param conditions: チェックするレコードの条件 (dict)
-        None: col_nameが空のレコード
-        ex) {'class': ['tooth', 'denticle']} : 'classの列がtoothまたはdenticleのレコード
+        :param labels: list of labels to add (list)
+        :param col_name: column names for labels (str)
+        :param conditions: Conditions for records to be checked (dict)
+        ex) {'class': ['tooth', 'denticle']}
         :param display_mode: box or mask
         :return:
         """
@@ -327,8 +313,7 @@ class ExcelDataProcessor:
                 pts = self.convert_to_vertex(all_points_x, all_points_y)
                 display_img = cv2.polylines(display_img, pts, True, (0, 0, 255), thickness=1)
                 cv2.imshow(window_name, display_img)
-            # print(f'現在のラベル: {df.at[index[pointer], col_name]}')
-            sys.stdout.write(f'\r現在のラベル: {df.at[index[pointer], col_name]}\n')
+            sys.stdout.write(f'\rcurrent label: {df.at[index[pointer], col_name]}\n')
             self.display_operation(labels)
             key = cv2.waitKey(0) & 0xFF
             if key == ord('q'):
@@ -354,7 +339,7 @@ class ExcelDataProcessor:
     def create(self, save_dir, conditions, label_col='class', num_random_crop=1, 
                mode='train', stride=640, non_img_generation = []):
         """
-        学習データの作成
+        generate training dataset
         :param save_dir:
         :param conditions:
         :param label_col:
@@ -489,7 +474,6 @@ class ExcelDataProcessor:
             print(filename)
             temp_df = sub_df[sub_df['original_slide_name'] == filename]
             gt_bbox = []
-            # TODO: メモリオーバー改善
             gt_mask = np.zeros((1, 1, len(temp_df)), dtype=np.int8)
             gt_class_id = np.array([], dtype=np.int8)
             gt_size = np.array([], dtype=float)
@@ -498,7 +482,6 @@ class ExcelDataProcessor:
                 gt_bbox.append([temp_df.loc[index, 'y_min'], temp_df.loc[index, 'x_min'],
                                 temp_df.loc[index, 'y_max'], temp_df.loc[index, 'x_max']])
                 gt_class_id = np.append(gt_class_id, class_names.index(temp_df.loc[index, 'class']))
-                # TODO: gt_maskを作成する機能 --> mask は作成していないが size と length は取れたので大体解決
                 record_size = False
                 if pd.notna(temp_df.loc[index, 'size']):
                     gt_size = np.append(gt_size, temp_df.loc[index, 'size'])
@@ -519,7 +502,7 @@ class ExcelDataProcessor:
 
     def save_min_max(self, conditions=None):
         """
-        輪郭座標から最小・最大を計算して保存
+        Calculate and save minimum and maximum from contour coordinates
         :param conditions:
         :return:
         """
@@ -546,7 +529,7 @@ class ExcelDataProcessor:
 
     def save_size(self, conditions=None):
         """
-        マスクの面積を計算して保存
+        Calculate and save areas of masks
         :param conditions:
         :return:
         """
@@ -581,7 +564,6 @@ class ExcelDataProcessor:
 
     def sort(self, col_names, ascending=None):
         """
-        col_namesを基準に並び替えさせる
         :param col_names:
         :param ascending:
         :return:
@@ -598,7 +580,7 @@ class ExcelDataProcessor:
 
     def batch_update(self, conditions, col_name, value):
         """
-        条件を満たすイクチオリスのcol_nameを一括で変更する
+        Change col_name that satisfies the condition at once
         :param conditions:
         :param col_name:
         :param value:
@@ -620,7 +602,7 @@ class ExcelDataProcessor:
 
     def describe(self, col_name, conditions, include=True):
         """
-        各種統計量の表示
+        Display statistics
         :param col_name:
         :param conditions:
         :param include:
@@ -633,7 +615,7 @@ class ExcelDataProcessor:
 
     def hist(self, col_name, conditions, bins=100, x_range=None, normed=False, include=True):
         """
-        ヒストグラムの表示
+        Display histgram
         :param col_name:
         :param conditions:
         :param bins:

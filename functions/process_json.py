@@ -13,9 +13,8 @@ def extract_sub_class_json(json_path, class_names, save_path):
         regions = value['regions']
         sub_regions = {}
         for region in regions.values():
-            if 'name' in region['region_attributes'].keys(): # 見
+            if 'name' in region['region_attributes'].keys():
                 name = region['region_attributes']['name']
-                # print(key) # 見邨コメントアウト
                 if name in class_names:
                     sub_regions[str(i)] = region
                     i += 1
@@ -29,10 +28,7 @@ def extract_sub_class_json(json_path, class_names, save_path):
 
 
 def convert_class_label(json_path, class_names_dict, save_path):
-    
-    # 見邨追加
     extract_sub_class_json(json_path, class_names_dict.keys(), save_path)
-
     with open(json_path, 'r') as f:
         data = json.load(f)
 
@@ -55,7 +51,7 @@ def convert_class_label(json_path, class_names_dict, save_path):
 
 def format_to_json(json_data, img_path, contours, class_name):
     """
-    overwrite new data in json format（見邨）
+    overwrite new data in json format
     if save_json_path is valid, save json file
     """
     img_name = os.path.basename(img_path)

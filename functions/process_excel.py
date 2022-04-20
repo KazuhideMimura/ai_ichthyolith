@@ -640,12 +640,6 @@ class ExcelDataProcessor:
         plt.show()
 
     def replace_labels(self, labels_dict, col_name):
-        """
-        ラベルを置換する
-        :param labels_dict:
-        :param col_name:
-        :return:
-        """
         df = self.read_excel()
         df = df.replace({col_name: labels_dict})
         df = df[self.columns]
@@ -655,7 +649,7 @@ class ExcelDataProcessor:
 
     def save_sub_dataset(self, save_path, conditions):
         """
-        特定のラベルのデータを抽出し，別ファイルに保存
+        Extracts data for a specific label and saves it in a separate file
         :param save_path:
         :param conditions:
         :return:
@@ -668,7 +662,7 @@ class ExcelDataProcessor:
 
     def delete_data(self, labels, col_name):
         """
-        特定のラベルのデータの削除
+        Deletion of data for a specific label
         :param labels:
         :param col_name:
         :return:
@@ -682,7 +676,7 @@ class ExcelDataProcessor:
 
     def get_ids(self, labels, col_name):
         """
-        特定のラベルのidを取得
+        Get the id of a specific label
         :param labels:
         :param col_name:
         :return:
@@ -693,14 +687,14 @@ class ExcelDataProcessor:
 
     def show_col_names(self):
         """
-        エクセルデータの列名を表示
+        Display Excel data column names
         :return:
         """
         print(self.columns)
 
     def backup(self, backup_path):
         """
-        エクセルデータのバックアップを作成
+        Create backup of Excel data
         :param backup_path:
         :return:
         """
@@ -709,7 +703,7 @@ class ExcelDataProcessor:
         print(f'file path: {backup_path}')
 
     def reset(self):
-        """エクセルデータを初期化"""
+        """Initialize Excel data"""
         df = pd.DataFrame(columns=self.columns)
         df.to_excel(self.excel_path, header=df.columns)
         print('reset dataset!')
@@ -788,7 +782,7 @@ class ExcelDataProcessor:
     @staticmethod
     def _get_slide_name(filename):
         """
-        画像名から元スライド名を取得する　(load_from_json, load_from_pickle)
+        Get the original slide name from the image name　(load_from_json, load_from_pickle)
         :param filename: 画像名
         :return original_slide_name: 元スライド名
         """
@@ -799,9 +793,9 @@ class ExcelDataProcessor:
     @staticmethod
     def _get_start_coordinates(filename):
         """
-        画像名から左上の座標を取得する (load_from_json, load_from_pickle)
-        :param filename: 画像名
-        :return start_x, start_y: 画像の左上の座標
+        Get the left-top coordinate from the image name (load_from_json, load_from_pickle)
+        :param filename: image name
+        :return start_x, start_y: left-top coordinate
         """
         parts = filename.split('_')
         start_y = np.array(int(parts[-2]))
@@ -830,7 +824,7 @@ class ExcelDataProcessor:
         return size
 
     @staticmethod
-    # 座標の最大・最小から面積を取得 (load_from_json, load_from_pickle)
+    # predict length from contour
     def _get_length(all_points_x, all_points_y, pixel2micron = 2.54):
         contour = np.array([all_points_x, all_points_y], dtype=np.int32).T
         rect = cv2.minAreaRect(contour)
@@ -839,7 +833,7 @@ class ExcelDataProcessor:
 
     @staticmethod
     def _to_string(points_array):
-        points_array = points_array.astype(int) # 見邨追記
+        points_array = points_array.astype(int)
         points_array = map(str, points_array.tolist())
         str_points_array = ', '.join(points_array)
         return str_points_array
@@ -855,7 +849,7 @@ class ExcelDataProcessor:
         return new_row
 
     @staticmethod
-    # pickleファイルのクラスIDからクラス名を取得
+    # Get class name from class ID in pickle file
     def _get_class_names_from_id(id_array, class_list):
         index = id_array.tolist()
         class_names = []
@@ -866,14 +860,12 @@ class ExcelDataProcessor:
     @staticmethod
     def _get_all_points_xy_from_mask(mask):
         """
-        maskから輪郭の座標情報を抽出 (load_from_pickle)
-        :param mask: binary mask (検出結果のpickleファイルと同じ形式のマスク)
-        :return all_points_x, all_points_y:
+        convert mask to point array of x and y
+        :param mask: binary mask
+        :return all_points_x, all_points_y: (np.array)
         """
         binary_mask = 255 * mask
-        # binary_mask = 255 * mask[112:-122, 112:-112]  # 1024x1024で学習済みの場合
         binary_mask = binary_mask.astype(np.uint8)
-        # binary_mask = cv2.resize(binary_mask, dsize=(640, 640))  # 1024x1024で学習済みの場合
         contours, hierarchy = cv2.findContours(binary_mask, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_NONE)
         all_points_x = []
         all_points_y = []
@@ -888,15 +880,14 @@ class ExcelDataProcessor:
     @staticmethod
     def get_sub_df(df, conditions, col_name, include=True):
         """
-        DataFrameから特定の条件のDataFrameを抽出
+        Extract sub-DataFrame with specific conditions from DataFrame
         :param df: DataFrame (pd.DataFrame)
-        :param conditions: 条件
-        None: col_nameが空のレコード
-        ex) {'class': ['tooth', 'denticle']} : 'classの列がtoothまたはdenticleのレコード
-        :param col_name: 対象の列名
-        :param include: True:  特定の条件を満たすレコードのみ抽出
-                        False: 特定の条件を満たさないレコードを抽出
-        :return sub_df:　抽出したDataFrame
+        :param conditions: conditions
+        ex) {'class': ['tooth', 'denticle']}
+        :param col_name: 
+        :param include: True:  Extract only records that meet specific criteria
+                        False: Extract only records that do not meet specific criteria
+        :return sub_df: 抽出したDataFrame
         """
         if conditions is None:
             sub_df = df[df[col_name].isnull()]
@@ -914,7 +905,7 @@ class ExcelDataProcessor:
     @staticmethod
     def convert_to_vertex(all_points_x, all_points_y):
         """
-        all_points_xとall_points_yから各頂点の座標の形式に変換する (put_labels)
+        Convert from all_points_x and all_points_y to the form of coordinates for each vertex (put_labels)
         :param all_points_x:
         :param all_points_y:
         :return:
@@ -928,7 +919,6 @@ class ExcelDataProcessor:
     @staticmethod
     def display_operation(labels):
         """
-        ラベル付けの際に表示する処理
         :param labels:
         :return:
         """
@@ -936,7 +926,7 @@ class ExcelDataProcessor:
         for i, label in enumerate(labels):
             string += f'{label} ... \'{i}\', '
         sys.stdout.write(f'{string}\n')
-        sys.stdout.write('ひとつ前に戻る ... \'b\', 次へ進む ... \'n\', 終了 ... \'q\'\n')
+        sys.stdout.write('back ... \'b\', next ... \'n\', quit ... \'q\'\n')
         print()
         clear_output(wait=True)
 

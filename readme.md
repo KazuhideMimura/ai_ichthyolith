@@ -1,5 +1,5 @@
 ## Citation
-Mimura, K., Minabe, S., Nakamura, K., Yasukawa, K., Ohta, J., Kato, Y. Automated detection of microfossil fish teeth from slide images using combined deep-learning models. *submitted to Computers & Geosciences*. 
+Mimura, K., Minabe, S., Nakamura, K., Yasukawa, K., Ohta, J., Kato, Y. Automated detection of microfossil fish teeth from slide images using combined deep-learning models. *submitted to Applied Computing & Geosciences*. 
 
 The preprint is available at [EarthArXiv](https://doi.org/10.31223/X5BD11)
 
@@ -69,6 +69,8 @@ He, K., Gkioxari, G., Dollár, P., & Girshick, R. (2017). Mask r-cnn. *In* Proce
 
 # notes
 ## log
+2022/5/3: Updated citation
+
 2022/4/21: Preprint was published on [EarthArXiv](https://doi.org/10.31223/X5BD11)
 
 2022/4/20: translated Japanese comments to English

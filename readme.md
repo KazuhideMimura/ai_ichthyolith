@@ -1,3 +1,6 @@
+# ai_ichthyolith
+![Visitors](https://visitor-badge.glitch.me/badge?page_id=KazuhideMimura/ai_ichthyolith&left_color=gray&right_color=blue)
+
 ## Citation
 Mimura, K., Minabe, S., Nakamura, K., Yasukawa, K., Ohta, J., Kato, Y. Automated detection of microfossil fish teeth from slide images using combined deep-learning models. *submitted to Applied Computing & Geosciences*. 
 
@@ -69,6 +72,8 @@ He, K., Gkioxari, G., Dollár, P., & Girshick, R. (2017). Mask r-cnn. *In* Proce
 
 # notes
 ## log
+2022/6/7: started counting visitors
+
 2022/5/3: Updated citation
 
 2022/4/21: Preprint was published on [EarthArXiv](https://doi.org/10.31223/X5BD11)

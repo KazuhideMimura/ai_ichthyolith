@@ -2,7 +2,7 @@
 ![Visitors](https://visitor-badge.glitch.me/badge?page_id=KazuhideMimura/ai_ichthyolith&left_color=gray&right_color=blue)
 
 ## Citation
-Mimura, K., Minabe, S., Nakamura, K., Yasukawa, K., Ohta, J., Kato, Y. Automated detection of microfossil fish teeth from slide images using combined deep-learning models. *Applied Computing & Geosciences* (accepted). https://doi.org/10.1016/j.acags.2022.100092
+Mimura, K., Minabe, S., Nakamura, K., Yasukawa, K., Ohta, J., & Kato, Y. (2022). Automated detection of microfossil fish teeth from slide images using combined deep learning models. *Applied Computing and Geosciences*, 100092. https://doi.org/10.1016/j.acags.2022.100092
 
 # About
 **ai_ichthyolith** is an application of Mask R-CNN for detecting microfossil (typically microfossil fish teeth called **ichthyolith**) images.
